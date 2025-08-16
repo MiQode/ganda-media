@@ -1,5 +1,5 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Image from 'next/image';
+import styles from './page.module.css';
 
 export default function Home() {
   return (
@@ -13,6 +13,7 @@ export default function Home() {
           height={38}
           priority
         />
+        <h1 className="text-green-500">Hello</h1>
         <ol>
           <li>
             Get started by editing <code>src/app/page.js</code>.
