@@ -3,7 +3,11 @@
 import Image from 'next/image';
 import styles from './writePage.module.css';
 import { useEffect, useState } from 'react';
-import 'react-quill/dist/quill.bubble.css';
+// import 'react-quill/dist/quill.bubble.css';
+
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.bubble.css';
+
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import {
@@ -13,7 +17,7 @@ import {
   getDownloadURL,
 } from 'firebase/storage';
 import { app } from '@/utils/firebase';
-import ReactQuill from 'react-quill';
+// import ReactQuill from 'react-quill';
 
 const WritePage = () => {
   const { status } = useSession();
@@ -61,12 +65,19 @@ const WritePage = () => {
     file && upload();
   }, [file]);
 
+  // Handle authenticated redirect
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/'); // ✅ client-side navigation
+    }
+  }, [status, router]);
+
   if (status === 'loading') {
-    return <div className={styles.loading}>Loading...</div>;
+    return <div>Loading...</div>; // ✅ don’t render page until we know
   }
 
   if (status === 'unauthenticated') {
-    router.push('/');
+    return <div>You must log in to access this page.</div>;
   }
 
   const slugify = (str) =>
@@ -103,17 +114,7 @@ const WritePage = () => {
         className={styles.input}
         onChange={(e) => setTitle(e.target.value)}
       />
-      {/* <select
-        className={styles.select}
-        onChange={(e) => setCatSlug(e.target.value)}
-      >
-        <option value="style">style</option>
-        <option value="fashion">fashion</option>
-        <option value="food">food</option>
-        <option value="culture">culture</option>
-        <option value="travel">travel</option>
-        <option value="coding">coding</option>
-      </select> */}
+
       <div className={styles.editor}>
         <button className={styles.button} onClick={() => setOpen(!open)}>
           <Image src="/plus.png" alt="" width={16} height={16} />
